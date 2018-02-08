@@ -1,0 +1,60 @@
+﻿@model PagedList.IPagedList<Model.EF.User>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Quản lý người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section header { Danh sách người dùng }
+
+<div>
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr id="row_@item.ID">
+                                    <td>
+                                        <a href="/Admin/Users/Edit?userId=@item.ID">Edit</a>
+                                        <a href="/Admin/Users/Delete?userId=@item.ID">Delete</a>
+                                        @Ajax.ActionLink("Delete", "Delete",new { @id=item.ID}, new AjaxOptions
+                                   {
+                                       OnComplete = $"$('row_{@item.ID}').remove()",
+                                       Confirm = "Delete?",
+                                       HttpMethod = "Delete",
+                                       OnSuccess = "handleSuccess"
+                                   })
+                                    </td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Address</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.Phone</td>
+                                    <td>@item.Status</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }));
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>
