@@ -18,9 +18,11 @@ namespace OnlineShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/Users
-        public ActionResult Index(int page = 1, int pagesize = 10)
+        public ActionResult Index(int page = 1, int pagesize = 10, string search_string = "")
         {
-            var users = UserDao.GetAll(page, pagesize);
+
+            var users = UserDao.GetAll(page, pagesize,search_string);
+            ViewBag.search_string = search_string;
             return View(users);
         }
         [HttpGet]
@@ -56,10 +58,14 @@ namespace OnlineShop.Areas.Admin.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{userId}")]
         public ActionResult Delete(int id)
         {
             return RedirectToAction("Index");
+        }
+
+        public ActionResult test()
+        {
+            return View();
         }
     }
 }

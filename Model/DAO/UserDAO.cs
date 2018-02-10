@@ -27,9 +27,14 @@ namespace Model.DAO
             var result = db.User.SingleOrDefault(x => x.UserName == username && x.Password == password);
             return result;
         }
-        public IEnumerable<User> GetAll(int page = 1, int pagesize = 10)
+        public IEnumerable<User> GetAll(int page = 1, int pagesize = 10, string search_string = "")
         {
-            return db.User.OrderBy(x=>x.CreateDate).ToPagedList(page, pagesize);
+            IQueryable<User> model = db.User;
+            if (!string.IsNullOrEmpty(search_string))
+            {
+                model = model.Where(x => x.Name.Contains(search_string));
+            }
+            return model.OrderBy(x => x.CreateDate).ToPagedList(page, pagesize);
         }
 
         public bool Update(User user)
